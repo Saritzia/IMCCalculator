@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">IMCCalculator</string>
+    <string name="mainTitle">Cálculo IMC</string>
+    <string name="heightPlaceHolder">Introduzca su altura</string>
+    <string name="weightPlaceHolder">Introduzca su peso</string>
+    <string name="man">Hombre</string>
+    <string name="woman">Mujer</string>
+    <string name="validate">Validar</string>
+</resources>
