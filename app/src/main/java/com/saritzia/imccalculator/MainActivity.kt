@@ -1,57 +1,53 @@
 package com.saritzia.imccalculator
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.widget.RadioGroup
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.saritzia.imccalculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
-    private var height = "0"
-    private var weight = "0"
-    private lateinit var gender : Gender
-    private enum class Gender {
-        HOMBRE,
-        MUJER
-    }
+    private var gender = ""
+    private lateinit var group : RadioGroup
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        configurateButtons()
-    }
-    private fun getHeight(){
-        binding.heightEditText.setOnClickListener {
-            height = binding.heightEditText.text.toString()
-        }
-    }
-    private fun getWeight(){
-        binding.weightEditText.setOnClickListener {
-            height = binding.weightEditText.text.toString()
-        }
+        group = findViewById(binding.radioGroup1.id)
+        didTapValidateButton()
     }
     private fun getGender(){
-        binding.menRadioButton.setOnClickListener {
-            gender = Gender.HOMBRE
-        }
-        binding.womenRadioButton.setOnClickListener {
-            gender = Gender.MUJER
+        gender = if(group.checkedRadioButtonId == binding.menRadioButton.id){
+            "Hombre"
+        }else{
+            "Mujer"
         }
     }
     private fun didTapValidateButton() {
         binding.validateButton.setOnClickListener {
-            val intent = Intent(applicationContext, DetailActivity::class.java)
-            intent.putExtra("height", height)
-            intent.putExtra("weight", weight)
-            intent.putExtra("gender",gender)
-            startActivity(intent)
+            val height = binding.heightEditText.text.toString()
+            val weight = binding.weightEditText.text.toString()
+            getGender()
+            if(height.isEmpty() || weight.isEmpty() || gender.isEmpty()) {
+                createSnackBar()
+            }else{
+                navigateToNextActivity(height,weight,gender)
+            }
         }
     }
-    private fun configurateButtons(){
-        getHeight()
-        getWeight()
-        getGender()
-        didTapValidateButton()
+    private fun createSnackBar(){
+        Snackbar.make(binding.root, "Rellene los campos, por favor",Snackbar.LENGTH_LONG).show()
+    }
+    private fun navigateToNextActivity(height: String,weight: String, gender: String){
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("height", height)
+        intent.putExtra("weight", weight)
+        intent.putExtra("gender",gender)
+        startActivity(intent)
     }
 }
